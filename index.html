@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tramear · Vamos continuar a conversa?</title>
-<meta name="description" content="Conte um pouco sobre você e o momento de IA na sua organização.">
+<meta name="description" content="Conte um pouco sobre você e sobre o momento da sua organização.">
 <meta name="theme-color" content="#01524C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,7 +113,7 @@ footer a { color: var(--green); }
   <div class="wrap">
     <div class="brand"><img class="logo" src="tramear-logo.png" alt="Tramear" width="180" height="33"><span class="tagline">movimentar para transformar</span></div>
     <h1>Vamos continuar <span class="hand">a conversa?</span></h1>
-    <p>Conte um pouco sobre você e sobre o momento de IA na sua organização. Leva cerca de 2 minutos.</p>
+    <p>Conte um pouco sobre você e sobre o momento da sua organização. Leva cerca de 2 minutos.</p>
   </div>
 </header>
 
@@ -122,22 +122,22 @@ footer a { color: var(--green); }
   <fieldset class="section">
     <legend>Contato</legend>
     <div class="field" data-req>
-      <label for="nome">Nome</label>
+      <label for="nome" class="q-title"><span class="q-num">1</span><span>Nome</span></label>
       <input id="nome" name="nome" type="text" autocomplete="name" required maxlength="200">
       <span class="err">Conte seu nome.</span>
     </div>
     <div class="field" data-req>
-      <label for="cargo">Cargo</label>
+      <label for="cargo" class="q-title"><span class="q-num">2</span><span>Cargo</span></label>
       <input id="cargo" name="cargo" type="text" autocomplete="organization-title" required maxlength="200">
       <span class="err">Conte seu cargo.</span>
     </div>
     <div class="field" data-req>
-      <label for="empresa">Empresa</label>
+      <label for="empresa" class="q-title"><span class="q-num">3</span><span>Empresa</span></label>
       <input id="empresa" name="empresa" type="text" autocomplete="organization" required maxlength="200">
       <span class="err">Conte o nome da empresa.</span>
     </div>
     <div class="field" data-req>
-      <label for="email">E-mail</label>
+      <label for="email" class="q-title"><span class="q-num">4</span><span>E-mail</span></label>
       <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="200">
       <span class="err">Confira o e-mail.</span>
     </div>
@@ -184,6 +184,7 @@ footer a { color: var(--green); }
         <label class="opt check"><input type="checkbox" name="temas" value="Desenvolvimento de líderes"><span class="mark"></span><span>Desenvolvimento de líderes</span></label>
         <label class="opt check"><input type="checkbox" name="temas" value="Cultura organizacional"><span class="mark"></span><span>Cultura organizacional</span></label>
         <label class="opt check"><input type="checkbox" name="temas" value="Resiliência e bem-estar"><span class="mark"></span><span>Resiliência e bem-estar</span></label>
+        <label class="opt check"><input type="checkbox" name="temas" value="Nenhum tema no momento" data-none><span class="mark"></span><span>Nenhum tema no momento</span></label>
       </div>
     </fieldset>
   </fieldset>
@@ -241,6 +242,13 @@ form.addEventListener('input', e => {
   if (box && e.target.value.trim() !== '' && e.target.checkValidity()) box.classList.remove('invalid');
 });
 form.addEventListener('change', e => { const g = e.target.closest('[data-req-group]'); if (g && g.querySelector('input:checked')) g.classList.remove('invalid'); });
+// "Nenhum tema no momento" and the topics exclude each other
+form.addEventListener('change', e => {
+  if (e.target.name !== 'temas' || !e.target.checked) return;
+  const none = form.querySelector('input[name=temas][data-none]');
+  if (e.target === none) form.querySelectorAll('input[name=temas]:not([data-none])').forEach(c => { c.checked = false; });
+  else none.checked = false;
+});
 
 form.addEventListener('submit', async e => {
   e.preventDefault();
